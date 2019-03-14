@@ -1,7 +1,5 @@
 package com.thirdmadman.tgu;
 
-//import com.gargoylesoftware.htmlunit.html.HtmlPage;
-//import  com.gargoylesoftware.htmlunit.WebClient;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -61,21 +59,6 @@ public class Login extends Fragment {
     public TextView loginCongratulationsText;
 
     SharedPreferences sPref;
-
-  /*  public static String homePage() throws Exception {
-        try (final WebClient webClient = new WebClient()) {
-            final HtmlPage page = webClient.getPage("http://htmlunit.sourceforge.net");
-            //Assert.assertEquals("HtmlUnit - Welcome to HtmlUnit", page.getTitleText());
-
-            final String pageAsXml = page.asXml();
-            //Assert.assertTrue(pageAsXml.contains("<body class=\"composite\">"));
-
-            final String pageAsText = page.asText();
-            //Assert.assertTrue(pageAsText.contains("Support for the HTTP and HTTPS protocols"));
-            return page.asText();
-        }
-    }
-*/
 
     @Nullable
     @Override
@@ -178,7 +161,7 @@ public class Login extends Fragment {
 
     class MyTask extends AsyncTask<Void, Void, Void> {
         protected Map<String, String> authCookies = null;
-        String title;//Тут храним значение заголовка сайта
+        String title;
         boolean needToUpdate = false;
 
         @Override
@@ -244,8 +227,6 @@ public class Login extends Fragment {
                     e.printStackTrace();
                 }
                 try {
-                    //title = page.select("div.weekbmcontainer > div.weekbmpage > table > tbody ").text();
-
                     title = page.select("tr > td.status_box:not(#core_time_place) > p").text();
                     if (!title.equals("")) {
                         user_name = title;

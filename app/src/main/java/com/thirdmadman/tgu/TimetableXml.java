@@ -39,11 +39,12 @@ import javax.xml.parsers.ParserConfigurationException;
 /**
  * Created by thirdmadman on 30.11.2017.
  * Special class for reading, writing and DOSOMEACTION with parsed html timetable from edu.tltsu.ru
- * this pice of sheet really anoying, and "portal" so buggy
- * let me tell some story...or not? I dont know, really...because for now 12.02.2018 I disopitment so much
- * Its gone more than one month and I'm still not quet ready to do this
- * every time I come back to this code I cying. This difficult to write this app after long delays...(24.03.2018)
+ * this piece of sheet really annoying, and "portal" so buggy
+ * let me tell some story...or not? I don't know, really...because for now 12.02.2018 I disappointment so much
+ * Its gone more than one month and I'm still not quite ready to do this
+ * every time I come back to this code I crying. This difficult to write this app after long delays...(24.03.2018)
  * FUCKFUCKFUCKFUCK WHAT THIS CODE MEANS?! KURVA!!! (16.05.2018)
+ * LOL, git added - epic win! (15.03.2019)
  */
 
 public class TimetableXml {
@@ -58,7 +59,7 @@ public class TimetableXml {
         this.userId = userId;
         this.authCookies = authCookies;
         this.appContext = appContext;
-        this.xmlPath = appContext.getFilesDir().getPath() + "/" + userId + "/"; // TODO: make shure that this is right path to files
+        this.xmlPath = appContext.getFilesDir().getPath() + "/" + userId + "/"; // TODO: make sure that this is right path to files
         if (!new File(xmlPath).exists()) {
             new File(xmlPath).mkdir();
         }
@@ -77,7 +78,7 @@ public class TimetableXml {
         this.userId = userId;
         this.authCookies = authCookies;
         this.appContext = appContext;
-        this.xmlPath = appContext.getFilesDir().getPath() + "/" + customPath + "/"; // TODO: make shure that this is right path to files
+        this.xmlPath = appContext.getFilesDir().getPath() + "/" + customPath + "/"; // TODO: make sure that this is right path to files
     }
 
     public WeeklyTimetable getTimetableForNow(String arg) {
