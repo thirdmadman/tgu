@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.thirdmadman.tgu.MyCabinet"
+
+    >
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/login_background" />
+
+    <RelativeLayout
+        android:id="@+id/applications_cabinet_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="225dp"
+            android:background="@drawable/application_background"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/applications_greeting_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="30dp"
+                android:text="@string/applications_greeting_text"
+                android:textAlignment="viewStart"
+                android:textColor="#ffffff"
+                android:textSize="36sp" />
+
+            <TextView
+                android:id="@+id/applications_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="80dp"
+
+                android:text="Незнакомец"
+                android:textAlignment="viewStart"
+                android:textColor="#ffffff"
+                android:textSize="36sp" />
+
+            <TextView
+                android:id="@+id/applications_congratulations"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginLeft="42dp"
+                android:layout_marginTop="130dp"
+                android:text="Ты сегодня как всегда молодцом"
+                android:textAlignment="viewStart"
+                android:textColor="#ffffff"
+                android:textSize="16sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_marginTop="175dp"
+                android:background="#28000000"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/applications_tickets_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="40dp"
+                    android:text="0"
+                    android:textColor="#ffffff"
+                    android:textSize="36sp" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="85dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_toRightOf="@+id/applications_tickets_number"
+                    android:text="@string/applications_tickets_desc_text"
+                    android:textColor="#ffffff"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/applications_resolved_tickets_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="15dp"
+                    android:layout_toLeftOf="@+id/textView4"
+                    android:text="0"
+                    android:textColor="#ffffff"
+                    android:textSize="36sp" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="40dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/applications_resolved_tickets_desc_text"
+                    android:textColor="#ffffff"
+                    android:textSize="12sp" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="225dp"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/applications_noactive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="100dp"
+                android:text="Нет активных заявок"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                android:visibility="invisible" />
+
+            <EditText
+                android:id="@+id/applications_find_req_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="11dp"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:hint="номер заявки"
+                android:inputType="number"
+                android:textAlignment="center" />
+
+            <Button
+                android:id="@+id/applications_find_req"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@+id/applications_find_req_number"
+                android:text="Найти" />
+
+            <ListView
+                android:id="@+id/applications_listview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="70dp">
+
+            </ListView>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/applications_anon_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:visibility="invisible">
+
+        <Button
+            android:id="@+id/applicationsMakeReqButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:text="@string/applications_send_application_button"
+            android:visibility="invisible" />
+
+        <Button
+            android:id="@+id/applicationsFindReq"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/applicationsMakeReqButton"
+            android:layout_marginTop="37dp"
+            android:text="@string/applications_find_req_button" />
+
+        <EditText
+            android:id="@+id/applications_ticket_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/applicationsMakeReqButton"
+            android:layout_centerHorizontal="true"
+            android:ems="10"
+            android:inputType="number"
+            android:text="150" />
+
+    </RelativeLayout>
+
+</android.widget.RelativeLayout>

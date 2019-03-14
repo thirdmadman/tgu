@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.thirdmadman.tgu.MyCabinet"
+
+    >
+
+    <RelativeLayout
+        android:id="@+id/applications_new_req_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/application_background"
+        android:visibility="visible"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#32000000"
+            android:visibility="visible"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp">
+
+            <EditText
+                android:id="@+id/applications_new_req_fullname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="64dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:hint="ФИО (полностью)"
+                android:textColor="@android:color/white" />
+            <EditText
+                android:id="@+id/applications_new_req_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/applications_new_req_fullname"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:hint="Группа или подразделение"
+                android:textColor="@android:color/white" />
+            <EditText
+                android:id="@+id/applications_new_req_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/applications_new_req_group"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:inputType="textEmailAddress"
+                android:hint="Email"
+                android:textColor="@android:color/white" />
+            <EditText
+                android:id="@+id/applications_new_req_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/applications_new_req_email"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:inputType="phone"
+                android:hint="Телефон"
+                android:textColor="@android:color/white" />
+            <EditText
+                android:id="@+id/applications_new_req_bilding"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/applications_new_req_phone"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:hint="Корпус"
+                android:layout_alignParentLeft="true"
+
+                android:textColor="@android:color/white" />
+            <EditText
+                android:id="@+id/applications_new_req_room"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/applications_new_req_phone"
+                android:layout_toRightOf="@id/applications_new_req_bilding"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:hint="Аудитория"
+                android:layout_marginLeft="20dp"
+                android:textColor="@android:color/white" />
+            <EditText
+                android:id="@+id/applications_new_req_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/applications_new_req_room"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:inputType="textMultiLine"
+                android:hint="Описание"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/applications_new_req_desc"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="33dp"
+                android:text="ДОБАВИТЬ ЗАЯВЛЕНИЕ" />
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/application_new_req_progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="invisible" />
+
+</android.widget.RelativeLayout>

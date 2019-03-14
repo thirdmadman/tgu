@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#0054a4</color>
+    <color name="colorPrimaryDark">#004c94</color>
+    <color name="colorAccent">#004c94</color>
+
+    <color name="colorTimetableSwiper1">#00AEEF</color>
+    <color name="colorTimetableSwiper2">#91bd09</color>
+    <color name="colorTimetableSwiper3">#0054a4</color>
+
+    <color name="black_overlay">#66000000</color>
+</resources>

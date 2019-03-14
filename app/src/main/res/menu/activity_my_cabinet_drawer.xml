@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_login"
+            android:icon="@drawable/ic_menu_login"
+            android:title="@string/navLoginBtn" />
+        <item
+            android:id="@+id/nav_show_timtable"
+            android:icon="@drawable/ic_menu_timemable"
+            android:title="@string/navTimetableBtn" />
+        <item
+            android:id="@+id/nav_terms"
+            android:icon="@android:drawable/ic_dialog_info"
+            android:title="@string/terms_of_service" />
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/nav_settings_string" />
+        <item
+            android:id="@+id/nav_courses"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/nav_courses_string"
+            android:visible="false" />
+        <item
+            android:id="@+id/nav_applications"
+            android:icon="@drawable/ic_menu_applications"
+            android:title="@string/nav_applications_string"
+            android:visible="true"/>
+    </group>
+
+    <item
+        android:title="Communicate"
+        android:visible="false">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Share" />
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Send" />
+        </menu>
+    </item>
+
+</menu>

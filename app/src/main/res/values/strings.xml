@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">My TGU</string>
+    <string name="login_title_name">Войти в аккунт</string>
+    <string name="settings_title_name">Настройки</string>
+    <string name="termsofservice_title_name">Соглашение пользователя (дисклеймер)</string>
+    <string name="timetable_title_name">Расписание</string>
+    <string name="applications_title_name">Мои заявки</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Settings</string>
+    <string name="loginFormTitleTextView">Вход в аккаунт</string>
+    <string name="loginBtnAction">Войти</string>
+    <string name="reloginBtnAction">Войти заново</string>
+    <string name="exitBtnAction">Выйти из аккаунта</string>
+    <string name="loginHelloText">Вы успешно вошли в свой аккаунт</string>
+    <string name="loginCongratulationsText">Безопасного вам дня!</string>
+    <string name="navLoginBtn">Вход в аккаунт</string>
+    <string name="navTimetableBtn">Просмотр расписания</string>
+    <string name="applications_hello_title_text"> </string>
+    <string name="applications_send_application_button">Подать заявку</string>
+    <string name="applications_find_req_button">Проверить статус</string>
+
+    <string name="title_activity_welcome_screen">WelcomeScreen</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="force_update">Принудительное обновление</string>
+    <string name="terms_of_service">Дисклеймер</string>
+    <string name="nav_settings_string">Настройки</string>
+    <string name="save_login_checkbox">Сохранить</string>
+    <string name="terms_of_service_text">Приложение и его функционал, включая все скрипты, контент и оформление поставляются «как есть». Разработчик приложения отказывается от всяких гарантий того, что приложение или его функционал могут подходить или не подходить для конкретных целей использования. Разработчик не может гарантировать и не обещает никаких специфических результатов от использования приложения и/или его функционала</string>
+    <string name="nav_courses_string">Моя успеваемость</string>
+    <string name="login_greeting_text">Вы успешно вошли в свой аккаунт</string>
+    <string name="applications_greeting_text">Привет</string>
+    <string name="nav_applications_string">Мои заявки</string>
+    <string name="applications_tickets_desc_text">Заявок на рассмотрении</string>
+    <string name="applications_resolved_tickets_desc_text">Заявок рассмотрено</string>
+</resources>
