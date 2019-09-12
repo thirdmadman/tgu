@@ -10,10 +10,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -50,7 +48,7 @@ public class CourseSelection extends Fragment {
         coursesList = (ListView) getActivity().findViewById(R.id.courseSelectionListView);
         courceSelProgrbar = (ProgressBar) getActivity().findViewById(R.id.courseSelectionProgressBar);
         final GetCourseSelection getSelection = new GetCourseSelection();
-        if (Global.authCookies != null) {
+        if (GlobalSettings.authCookies != null) {
             try {
 
                 getSelection.execute();
@@ -70,7 +68,7 @@ public class CourseSelection extends Fragment {
                 //TextView tv= (TextView) view;
                 //Toast.makeText(getActivity().getApplicationContext(),"Тут подробно " + position ,Toast.LENGTH_LONG).show();
                 //clicedList = position;
-                //if (Global.authCookies != null)
+                //if (GlobalSettings.authCookies != null)
                 //{
                     courceSelProgrbar.setVisibility(View.VISIBLE);
                     GetCourseMarks getMarks = new GetCourseMarks(Integer.parseInt(courseIds[position][1]));
@@ -94,12 +92,12 @@ public class CourseSelection extends Fragment {
 
                 try {
                     page = Jsoup.connect("http://edu.tltsu.ru/edu/assignments.php?semester=5849") // ?semester=5849 - костыль TODO: создать алгорит выбора семестора
-                            .cookies(Global.authCookies)
+                            .cookies(GlobalSettings.authCookies)
                             .get();
                     sPref = getActivity().getPreferences(Context.MODE_PRIVATE);
                     SharedPreferences.Editor ed = sPref.edit();
                     ed.putString("assignments_html", page.html().toString());
-                    ed.commit();
+                    ed.apply();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -151,7 +149,7 @@ public class CourseSelection extends Fragment {
             {
                 Connection.Response response =  Jsoup.connect("http://edu.tltsu.ru/edu/assignments.php?course_id=" + courseId) // ?semester=5849 - костыль TODO: создать алгорит выбора семестора
                         .ignoreContentType(true)
-                        .cookies(Global.authCookies)
+                        .cookies(GlobalSettings.authCookies)
                         .userAgent("\"User-Agent\", \"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11\"")
                         .referrer("http://edu.tltsu.ru/edu/assignments.php")
                         .execute();

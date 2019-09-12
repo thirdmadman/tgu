@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,22 +19,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.jsoup.helper.HttpConnection;
 import org.jsoup.nodes.Document;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Random;
 
-import javax.microedition.khronos.opengles.GL;
-
-import static android.R.attr.data;
-import static android.R.attr.stateNotNeeded;
 import static android.content.Context.MODE_PRIVATE;
 
 /**
@@ -96,7 +87,7 @@ public class Login extends Fragment {
                 login = loginField.getText().toString();
                 if (pass.length() > 4 & login.length() >= 4) {
 
-                    if (Global.authCookies == null) {
+                    if (GlobalSettings.authCookies == null) {
                         MyTask mt = new MyTask();
                         mt.execute();
                         loginPrgrBr.setVisibility(View.VISIBLE);
@@ -116,19 +107,19 @@ public class Login extends Fragment {
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Global.authCookies = null;
+                GlobalSettings.authCookies = null;
                 exitLayout.setVisibility(View.INVISIBLE);
                 loginLayout.setVisibility(View.VISIBLE);
             }
         });
         loadText();
-        if (Global.authCookies == null) {
+        if (GlobalSettings.authCookies == null) {
             loginLayout.setVisibility(View.VISIBLE);
             exitLayout.setVisibility(View.INVISIBLE);
-        } else if (Global.authCookies != null) {
+        } else if (GlobalSettings.authCookies != null) {
             loginLayout.setVisibility(View.INVISIBLE);
             exitLayout.setVisibility(View.VISIBLE);
-            userNameText.setText(Global.userSiteName);
+            userNameText.setText(GlobalSettings.userSiteName);
         }
 
 
@@ -139,14 +130,14 @@ public class Login extends Fragment {
         SharedPreferences.Editor ed = sPref.edit();
         ed.putString("user_login", loginField.getText().toString());
         ed.putString("user_password", passField.getText().toString());
-        ed.commit();
+        ed.apply();
     }
 
     void loadText() {
         sPref = getActivity().getPreferences(MODE_PRIVATE);
         String savedUserLogin = sPref.getString("user_login", "no data");
         String savedUserPassword = sPref.getString("user_password", "no data");
-        if (savedUserLogin != "no data") {
+        if (!savedUserLogin.equals("no data")) {
             loginField.setText(savedUserLogin);
             passField.setText(savedUserPassword);
         }
@@ -192,7 +183,7 @@ public class Login extends Fragment {
                     try {
                         JSONObject jsonObject = new JSONObject(body);
                         if (jsonObject.getBoolean("resoonse")) {
-                            if (jsonObject.getDouble("lastversion") > Global.CurrentVersion) {
+                            if (jsonObject.getDouble("lastversion") > GlobalSettings.CurrentVersion) {
                                 needToUpdate = true;
                             }
                         }
@@ -250,7 +241,7 @@ public class Login extends Fragment {
                     if (!user_name.equals("")) {
                         if (!user_name.contains("Гость")) {
                             saveText();
-                            Global.authCookies = authCookies;
+                            GlobalSettings.authCookies = authCookies;
                             Context context = getActivity().getApplicationContext();
                             //CharSequence text = "Вы успешно вошли!";
                             int duration = Toast.LENGTH_SHORT;
@@ -260,46 +251,15 @@ public class Login extends Fragment {
                                 Toast toast2 = Toast.makeText(context, "Необходимо обновление!", duration);
                                 toast2.show();
                             }
-                            Global.userSiteName = user_name;
+                            GlobalSettings.userSiteName = user_name;
                             userNameText.setText(user_name);
                             //userNameText.setText("Иванов И.И.");
                             sPref = getActivity().getPreferences(MODE_PRIVATE);
                             String savedUserLogin = sPref.getString("user_login", "no data");
                             if (savedUserLogin.equals("29549")) {
-                                final Random random = new Random();
-                                int randomInt = random.nextInt(11);
-                                //public String[] pairsinfo = new String[8];
-                                String[] congratulationsForMe = {
-                                        "Ну, здравствуй Питер!",
-                                        "Пили приложение давай.",
-                                        "Эгэгэй!",
-                                        "Так, позднер!",
-                                        "Сем раз отмерь, один раз позднер",
-                                        "Не имей сто друзей, а имей одного позднера",
-                                        "Амбар крепок, да презентации худы.",
-                                        "Бежал от дыма и упал в презентацию.",
-                                        "Скажиме кто твой друг, и оба делайте призентацию",
-                                        "Хотел как лучше, а получилась призентация",
-                                        "Ученье свет, а ты делай призентацию",
-                                        "Бабу с возу - призентацию делать легче",
-                                        "Слово не воробей - вылетит призентацию делать будешь"};
-                                loginCongratulationsText.setText(congratulationsForMe[randomInt]);
+                                loginCongratulationsText.setText(GlobalSettings.loginCongratulations[(new Random()).nextInt(GlobalSettings.loginCongratulations.length)]);
                             } else if (savedUserLogin.equals("29649")) {
-                                final Random random = new Random();
-                                int randomInt = random.nextInt(8);
-                                //public String[] pairsinfo = new String[8];
-                                String[] congratulationsForMe = {
-                                        "Так, позднер!",
-                                        "Сем раз отмерь, один раз позднер",
-                                        "Не имей сто друзей, а имей одного позднера",
-                                        "Амбар крепок, да презентации худы.",
-                                        "Бежал от дыма и упал в презентацию.",
-                                        "Скажиме кто твой друг, и оба делайте призентацию",
-                                        "Хотел как лучше, а получилась призентация",
-                                        "Ученье свет, а ты делай призентацию",
-                                        "Бабу с возу - призентацию делать легче",
-                                        "Слово не воробей - вылетит призентацию делать будешь"};
-                                loginCongratulationsText.setText(congratulationsForMe[randomInt]);
+                                loginCongratulationsText.setText(GlobalSettings.loginCongratulations[(new Random()).nextInt(GlobalSettings.loginCongratulations.length)]);
                             }
                             loginLayout.setVisibility(View.INVISIBLE);
                             exitLayout.setVisibility(View.VISIBLE);

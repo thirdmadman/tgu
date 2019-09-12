@@ -1,9 +1,7 @@
 package com.thirdmadman.tgu;
 
 import android.content.Context;
-import android.content.RestrictionEntry;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,20 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
-import org.jsoup.helper.HttpConnection;
-import org.jsoup.nodes.Document;
-
 import java.io.File;
-import java.io.IOException;
-import java.util.Map;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -85,8 +72,8 @@ public class Settings extends Fragment {
                 ed.putString("user_login", null);
                 ed.putString("user_password", null);
                 ed.putString("last_html", null);
-                Global.authCookies = null;
-                ed.commit();
+                GlobalSettings.authCookies = null;
+                ed.apply();
                 Toast toast3 = Toast.makeText(getActivity().getApplicationContext(), "Все данные удалены", Toast.LENGTH_SHORT);
                 toast3.show();
             }

@@ -1,10 +1,10 @@
 package com.thirdmadman.tgu;
 
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.support.design.widget.Snackbar;
 import android.view.View;
+
+import com.thirdmadman.tgu.Utils.TextParser;
 
 import org.jsoup.Jsoup;
 import org.jsoup.select.Elements;
@@ -16,16 +16,10 @@ import org.xml.sax.SAXException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -133,7 +127,7 @@ public class TimetableXml {
                 if (!arg.equals("")) {
                     wt = downloadTimetableForWeek(arg);
                 }
-            } else if (authCookies == null && (arg == null || arg.equals(""))){
+            } else if (authCookies == null && (arg == null || arg.equals(""))) {
                 Snackbar.make(view, "Вы ещё не вошли в аккаунт", Snackbar.LENGTH_LONG).show();
             }
         }
@@ -162,9 +156,9 @@ public class TimetableXml {
                     String weeksjsArray[] = weeksjs.split("showWeek");
                     String weeksList[][] = new String[2][weeksjsArray.length - 1];
                     for (int i = 1; i < weeksjsArray.length; i++) {
-                        weeksjsArray[i] = Global.parsit("START" + weeksjsArray[i], "START(", ");");
-                        weeksList[0][i - 1] = Global.parsit("START" + weeksjsArray[i], "START", ",");
-                        weeksList[1][i - 1] = Global.parsit(weeksjsArray[i] + "END", ",", "END");
+                        weeksjsArray[i] = TextParser.parseTextBetween("START" + weeksjsArray[i], "START(", ");");
+                        weeksList[0][i - 1] = TextParser.parseTextBetween("START" + weeksjsArray[i], "START", ",");
+                        weeksList[1][i - 1] = TextParser.parseTextBetween(weeksjsArray[i] + "END", ",", "END");
                     }
                     out = weeksList;
                 } else {
@@ -207,7 +201,7 @@ public class TimetableXml {
                     timetabel_td = timetabel_tr.get(i).select("td");
                     for (int o = 1; o < timetabel_td.size(); o++) {
                         timetable[o - 1][i] = timetabel_td.get(o).text();
-                        if (timetabel_td.get(o).id() != "") {
+                        if (!timetabel_td.get(o).id().equals("")) {
                             timetableFid[o - 1][i] = timetabel_td.get(o).id();
                         } else {
                             timetableFid[o - 1][i] = "";
@@ -224,9 +218,9 @@ public class TimetableXml {
     private WeeklyTimetable downloadTimetableForWeek(String week) {
         String weeksList[][] = readTimetableListFromXml("timetablelist.xml");
         String args = "";
-        for (int i = 0; i < weeksList.length; i++) {
-            if (weeksList[i][1].equals(week)) {
-                args = "?week=" + week + "&w_id=" + weeksList[i][2];
+        for (String[] strings : weeksList) {
+            if (strings[1].equals(week)) {
+                args = "?week=" + week + "&w_id=" + strings[2];
                 break;
             }
         }
@@ -243,7 +237,7 @@ public class TimetableXml {
                     timetabel_td = timetabel_tr.get(i).select("td");
                     for (int o = 1; o < timetabel_td.size(); o++) {
                         timetable[o - 1][i] = timetabel_td.get(o).text();
-                        if (timetabel_td.get(o).id() != "") {
+                        if (!timetabel_td.get(o).id().equals("")) {
                             timetableFid[o - 1][i] = timetabel_td.get(o).id();
                         } else {
                             timetableFid[o - 1][i] = "";
@@ -348,11 +342,11 @@ public class TimetableXml {
                 Elements timetabel_td = null;
                 Elements timetabel_tr = page.select("div.weekbmcontainer > div.weekbmpage[style*=display:block] > table > tbody tr");
 
-                for (int i = 0; i < timetabel_tr.size()-1; i++) {
+                for (int i = 0; i < timetabel_tr.size() - 1; i++) {
                     timetabel_td = timetabel_tr.get(i).select("td");
                     for (int o = 0; o < timetabel_td.size(); o++) {
                         timetable[i][o] = timetabel_td.get(o).text();
-                        if (timetabel_td.get(o).id() != "") {
+                        if (!timetabel_td.get(o).id().equals("")) {
                             timetableFid[i][o] = timetabel_td.get(o).id();
                         } else {
                             timetableFid[i][o] = "";
@@ -371,12 +365,12 @@ public class TimetableXml {
                 if (!timetablelistFile.exists()) {
                     timetablelistFile.mkdir();
                 } else {
-                    weekNumber = page.select("a.weekbmbutton-on").text().replaceAll("\\s+","");
+                    weekNumber = page.select("a.weekbmbutton-on").text().replaceAll("\\s+", "");
                     //weekNumber = weekNumber.replaceAll(" ","");
                     int weekIdFind1 = page.head().html().indexOf("showWeek(" + weekNumber + ",");
 
                     String weekId = page.head().html().substring(weekIdFind1, weekIdFind1 + 25);
-                    weekId = Global.parsit(weekId, "showWeek(" + weekNumber + ",", ");");
+                    weekId = TextParser.parseTextBetween(weekId, "showWeek(" + weekNumber + ",", ");");
                     String content = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><weeklytimetable>";
                     String[] d = {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"};
                     for (int i = 1; i < 8; i++) {
@@ -384,7 +378,7 @@ public class TimetableXml {
                             if (o == 0) {
                                 content += "<" + d[i - 1] + " name=\"" + timetable[o][i] + "\">";
                             } else {
-                                if (timetable[o][i] == null){
+                                if (timetable[o][i] == null) {
                                     String gg = "gg";
                                 }
                                 content += "<lesson number=\"" + o + "\" id=\"" + timetableFid[o][i] + "\">" + timetable[o][i] + "</lesson>";

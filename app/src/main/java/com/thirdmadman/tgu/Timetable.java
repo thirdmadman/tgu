@@ -1,37 +1,30 @@
 package com.thirdmadman.tgu;
 
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
-import android.content.Context;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.thirdmadman.tgu.Utils.TextParser;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -39,17 +32,9 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.WeekFields;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 import java.util.Map;
-
-import javax.microedition.khronos.opengles.GL;
 
 import static android.content.Context.MODE_PRIVATE;
 import static android.content.Context.NOTIFICATION_SERVICE;
@@ -94,8 +79,8 @@ public class Timetable extends Fragment {
         timetabelCooseWeek = (Spinner) getActivity().findViewById(R.id.timetable_choose_week);
         timetableLoadWeek = (Button) getActivity().findViewById(R.id.timetableGetWeek);
 
-        if (!Global.nowWeekNumber.equals("-1")) {
-            currentWeekNumber = Global.nowWeekNumber;
+        if (!GlobalSettings.nowWeekNumber.equals("-1")) {
+            currentWeekNumber = GlobalSettings.nowWeekNumber;
         }
 
         lst.setClickable(true);
@@ -107,8 +92,8 @@ public class Timetable extends Fragment {
         Thread startActivity  = new Thread(new Runnable() {
             public void run() {
                 TimetableXml txml = new TimetableXml(Integer.parseInt(savedUserLogin), null, getContext(), getView());
-                if (Global.authCookies != null) {
-                    txml.setAuthCookies(Global.authCookies);
+                if (GlobalSettings.authCookies != null) {
+                    txml.setAuthCookies(GlobalSettings.authCookies);
                 }
                 WeeklyTimetable wt1 = null;
                 if (currentWeekNumber.equals("-1")) {
@@ -127,7 +112,7 @@ public class Timetable extends Fragment {
                             if (timetableArrayForWeek != null) {
                                 currentWeekNumber = wt.getWeekNumber();
                                 for (int i = 0; i < SpinnerArry.length; i++) {
-                                    if (SpinnerArry[i].indexOf(currentWeekNumber +" неделя") >= 0) {
+                                    if (SpinnerArry[i].contains(currentWeekNumber + " неделя")) {
                                         timetabelCooseWeek.setSelection(i);
                                         break;
                                     }
@@ -143,11 +128,11 @@ public class Timetable extends Fragment {
                                 String notifyContent = "";
                                 String date1, compare;
 
-                                for (int i = 0; i < timetableArrayForWeek.length; i++) {
-                                    date1 = timetableArrayForWeek[i].substring(5, 10);
+                                for (String s : timetableArrayForWeek) {
+                                    date1 = s.substring(5, 10);
                                     compare = dateFormat.format(date).toString();
                                     if (date1.equals(compare)) {
-                                        notifyContent = timetableArrayForWeek[i].substring(11, timetableArrayForWeek[i].length());
+                                        notifyContent = s.substring(11, s.length());
                                     }
                                 }
                                 notifyName += ", " + dateFormat.format(date);
@@ -172,7 +157,7 @@ public class Timetable extends Fragment {
                         else {
                             if (SpinnerArry != null){
                                 for (int i = 0; i < SpinnerArry.length; i++) {
-                                    if (SpinnerArry[i].indexOf(currentWeekNumber +" неделя") >= 0) {
+                                    if (SpinnerArry[i].contains(currentWeekNumber + " неделя")) {
                                         timetabelCooseWeek.setSelection(i);
                                         break;
                                     }
@@ -195,8 +180,8 @@ public class Timetable extends Fragment {
                 new Thread(new Runnable() {
                     public void run() {
                         TimetableXml txml = new TimetableXml(Integer.parseInt(savedUserLogin), null, getContext(), getView());
-                        if (Global.authCookies != null) {
-                            txml.setAuthCookies(Global.authCookies);
+                        if (GlobalSettings.authCookies != null) {
+                            txml.setAuthCookies(GlobalSettings.authCookies);
                         }
                         txml.downloadTimetableList();
                         final WeeklyTimetable wt = txml.updateTimetableForWeek(currentWeekNumber);
@@ -221,7 +206,7 @@ public class Timetable extends Fragment {
         lst.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (Global.authCookies != null) {
+                if (GlobalSettings.authCookies != null) {
                     clicedList = position;
                     timetableprogressbar.setVisibility(View.VISIBLE);
                     getInfo gi = new getInfo(timetableArrayForWeek[clicedList]);
@@ -239,15 +224,15 @@ public class Timetable extends Fragment {
                 swiper.setRefreshing(true);
                 lst.setClickable(false);
                 String selectedItem = timetabelCooseWeek.getSelectedItem().toString();
-                if (!Global.parsit("start" + selectedItem, "start", " неделя").equals("")) {
-                    currentWeekNumber = Global.parsit("start" + selectedItem, "start", " неделя");
-                    Global.nowWeekNumber = currentWeekNumber;
+                if (!TextParser.parseTextBetween("start" + selectedItem, "start", " неделя").equals("")) {
+                    currentWeekNumber = TextParser.parseTextBetween("start" + selectedItem, "start", " неделя");
+                    GlobalSettings.nowWeekNumber = currentWeekNumber;
 
                     new Thread(new Runnable() {
                         public void run() {
                             TimetableXml txml = new TimetableXml(Integer.parseInt(savedUserLogin), null, getContext(), getView());
-                            if (Global.authCookies != null) {
-                                txml.setAuthCookies(Global.authCookies);
+                            if (GlobalSettings.authCookies != null) {
+                                txml.setAuthCookies(GlobalSettings.authCookies);
                             }
                             txml.downloadTimetableList();
                             final WeeklyTimetable wt = txml.getTimetableForNow(currentWeekNumber);
@@ -265,7 +250,7 @@ public class Timetable extends Fragment {
                                     lst.setClickable(true);
                                     loadSpinner(readTimetableList);
                                     for (int i = 0; i < SpinnerArry.length; i++) {
-                                        if (SpinnerArry[i].indexOf(currentWeekNumber +" неделя") >= 0) {
+                                        if (SpinnerArry[i].contains(currentWeekNumber + " неделя")) {
                                             timetabelCooseWeek.setSelection(i);
                                             break;
                                         }
@@ -412,7 +397,7 @@ public class Timetable extends Fragment {
                                 "&el=core_window_info_4" +
                                 "&0.4213821527514703" +
                                 "&burl=http%3A//edu.tltsu.ru/edu/timetable.php")
-                                //.cookies(Global.authCookies)
+                                //.cookies(GlobalSettings.authCookies)
                                 .get();
                         Elements getInfoElements = pageWithInfo.select("body > p");
                         String[] timetableCellElements = new String[getInfoElements.size() - 1];
@@ -422,7 +407,7 @@ public class Timetable extends Fragment {
                                 String teacherId = getInfoElements.get(i).select("p").html();
                                 if (teacherId.length() > 50) {
                                     teacherId = teacherId.replace("\"+String.fromCharCode(34)+\"", "").substring(42, 50);
-                                    teacherId = Global.parsit(teacherId, "(", ")");
+                                    teacherId = TextParser.parseTextBetween(teacherId, "(", ")");
                                     if (!teacherId.equals("")) {
                                         teacherInfo = Jsoup.connect("http://edu.tltsu.ru/contacts/dlg/user_info.php?user_id=" + teacherId)
                                                 .get();
@@ -432,7 +417,7 @@ public class Timetable extends Fragment {
                                 }
                             }
                             if (i == 0) {
-                                timetableCellElements[i] = Global.parsit(timetableCellElements[i], "(", ")");
+                                timetableCellElements[i] = TextParser.parseTextBetween(timetableCellElements[i], "(", ")");
                             }
                         }
 
@@ -451,16 +436,16 @@ public class Timetable extends Fragment {
                         someResult += g + ". " + "Данные не получены" + "end";
                     }
                 } else {
-                    if (Global.parsit(inputInfo, "\n" + g + " ", "\n" + (g + 1) + " ").substring(5).length() > 6) {
-                        someResult += g + ". " + Global.parsit(inputInfo, "\n" + g + " ", "\n" + (g + 1) + " ").substring(5) + "\n" + timeoflesson + "end";
+                    if (TextParser.parseTextBetween(inputInfo, "\n" + g + " ", "\n" + (g + 1) + " ").substring(5).length() > 6) {
+                        someResult += g + ". " + TextParser.parseTextBetween(inputInfo, "\n" + g + " ", "\n" + (g + 1) + " ").substring(5) + "\n" + timeoflesson + "end";
 
                     } else {
                         someResult += g + ". " + "---" + "end";
                     }
                 }
             }
-            Global.savedGetInfo = someResult;
-            Global.getInfoTitle = Global.parsit("strt" + inputInfo, "strt", "\n1 ");
+            GlobalSettings.savedGetInfo = someResult;
+            GlobalSettings.getInfoTitle = TextParser.parseTextBetween("strt" + inputInfo, "strt", "\n1 ");
             return null;
         }
 

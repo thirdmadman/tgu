@@ -1,6 +1,5 @@
 package com.thirdmadman.tgu;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -11,27 +10,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.thirdmadman.tgu.Utils.TextParser;
+
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.jsoup.helper.HttpConnection;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.Random;
-
-import javax.microedition.khronos.opengles.GL;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -74,13 +66,13 @@ public class Applications extends Fragment {
         applicationsFindReqNumber = (EditText) view.findViewById(R.id.applications_find_req_number);
         applicationsCabinetLayout = (RelativeLayout) view.findViewById(R.id.applications_cabinet_layout);
         applicationsAnonLayout = (RelativeLayout) view.findViewById(R.id.applications_anon_layout);
-/*        if (Global.authCookies == null) {
+/*        if (GlobalSettings.authCookies == null) {
             loginLayout.setVisibility(View.VISIBLE);
             exitLayout.setVisibility(View.INVISIBLE);
-        } else if (Global.authCookies != null) {
+        } else if (GlobalSettings.authCookies != null) {
             loginLayout.setVisibility(View.INVISIBLE);
             exitLayout.setVisibility(View.VISIBLE);
-            userNameText.setText(Global.userSiteName);
+            userNameText.setText(GlobalSettings.userSiteName);
         }*/
         if (loadUserLogin() != null)
         {
@@ -99,7 +91,7 @@ public class Applications extends Fragment {
             @Override
             public void onClick(View v) {
                 if (!applications_ticket_number.getText().toString().equals("")) {
-                    Global.supportTicketNumber = applications_ticket_number.getText().toString();
+                    GlobalSettings.supportTicketNumber = applications_ticket_number.getText().toString();
                     Intent intent = new Intent(getActivity(), ApplicationsGetInfo.class);
                     startActivity(intent);
                 }
@@ -109,7 +101,7 @@ public class Applications extends Fragment {
             @Override
             public void onClick(View v) {
                 if (!applicationsFindReqNumber.getText().toString().equals("")) {
-                    Global.supportTicketNumber = applicationsFindReqNumber.getText().toString();
+                    GlobalSettings.supportTicketNumber = applicationsFindReqNumber.getText().toString();
                     Intent intent = new Intent(getActivity(), ApplicationsGetInfo.class);
                     startActivity(intent);
                 }
@@ -188,7 +180,7 @@ public class Applications extends Fragment {
                                 .timeout(3000)
                                 .get();
                         String puy = "FFF" + testPage.select("div#container > div#header > p").text();
-                        userName = Global.parsit(puy,"FFF"," - ");
+                        userName = TextParser.parseTextBetween(puy,"FFF"," - ");
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -208,10 +200,10 @@ public class Applications extends Fragment {
                                 for (int i = 0; i < ttt.size(); i++) {
                                     if ( ttt.get(i).attr("value").equals("closed"))
                                     {
-                                        applicationsResolvedTicketsNumber =+ Integer.parseInt(Global.parsit(ttt.get(i).text(), "(", ")"));
+                                        applicationsResolvedTicketsNumber =+ Integer.parseInt(TextParser.parseTextBetween(ttt.get(i).text(), "(", ")"));
                                     } else if ( ttt.get(i).attr("value").equals("open") || ttt.get(i).attr("value").equals("assigned"))
                                     {
-                                        applicationsTicketsNumber =+ Integer.parseInt(Global.parsit(ttt.get(i).text(), "(", ")"));
+                                        applicationsTicketsNumber =+ Integer.parseInt(TextParser.parseTextBetween(ttt.get(i).text(), "(", ")"));
                                     }
                                 }
                             }

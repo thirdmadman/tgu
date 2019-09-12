@@ -1,19 +1,15 @@
 package com.thirdmadman.tgu;
 
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
+import com.thirdmadman.tgu.Utils.TextParser;
+
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -21,11 +17,6 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.jar.JarException;
-
-import javax.microedition.khronos.opengles.GL;
-
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by third on 10.11.2017.
@@ -56,16 +47,16 @@ public class ApplicationsGetInfo extends AppCompatActivity {
         application_get_info_desc = (TextView) findViewById(R.id.application_get_info_desc);
         application_get_info_solution= (TextView) findViewById(R.id.application_get_info_solutin);
         applicationGetInfoProgressBar = (ProgressBar)findViewById(R.id.application_get_info_progressBar);
-/*        if (Global.authCookies == null) {
+/*        if (GlobalSettings.authCookies == null) {
             loginLayout.setVisibility(View.VISIBLE);
             exitLayout.setVisibility(View.INVISIBLE);
-        } else if (Global.authCookies != null) {
+        } else if (GlobalSettings.authCookies != null) {
             loginLayout.setVisibility(View.INVISIBLE);
             exitLayout.setVisibility(View.VISIBLE);
-            userNameText.setText(Global.userSiteName);
+            userNameText.setText(GlobalSettings.userSiteName);
         }*/
-if (Global.supportTicketNumber != null) {
-    ApplicationsGetInfoReq getInfo = new ApplicationsGetInfoReq(Global.supportTicketNumber);
+if (GlobalSettings.supportTicketNumber != null) {
+    ApplicationsGetInfoReq getInfo = new ApplicationsGetInfoReq(GlobalSettings.supportTicketNumber);
     getInfo.execute();
     applicationGetInfoProgressBar.setVisibility(View.VISIBLE);
 }
@@ -110,7 +101,7 @@ if (Global.supportTicketNumber != null) {
             try {
                 if (applicationsAuthCookies != null) {
                     ticketResponse = Jsoup.connect("https://support.tltsu.ru/myticket.php?id=" + ticketId)
-                            .cookies(Global.supportAuthCookies)
+                            .cookies(GlobalSettings.supportAuthCookies)
                             .method(Connection.Method.GET)
                             .timeout(3500)
                             .execute();
@@ -138,7 +129,7 @@ if (Global.supportTicketNumber != null) {
                     Elements uuu = ttt.get(1).select("table > tbody > tr");
                     String s = ttt.get(1).html();
                     req_number = ticketPage.select("table#ticketInfo > tbody > tr > td > h1").text();
-                    req_number = Global.parsit(req_number+"<end>","№","<end>");
+                    req_number = TextParser.parseTextBetween(req_number+"<end>","№","<end>");
                     status = yyy.select("tr > td").get(0).text();
                     req_date=yyy.select("tr > td").get(1).text();
                     department = uuu.select("tr > td").get(0).text();
@@ -150,15 +141,15 @@ if (Global.supportTicketNumber != null) {
                     String parseTo2 = "<h2 style=\"margin-bottom:10px;\"><br>Описание решения:</h2>";
                     Elements iii = ticketPageDesc.select("div#content");
                     String parseWhat = iii.html();
-                    if (!Global.parsit(parseWhat,parseFrom,parseTo2).equals("")) {
-                        Document ooo = Jsoup.parse(Global.parsit(parseWhat, parseFrom, parseTo2));
+                    if (!TextParser.parseTextBetween(parseWhat,parseFrom,parseTo2).equals("")) {
+                        Document ooo = Jsoup.parse(TextParser.parseTextBetween(parseWhat, parseFrom, parseTo2));
                         desc = ooo.text();
-                        ooo = Jsoup.parse(Global.parsit(parseWhat, parseTo2, parseTo));
+                        ooo = Jsoup.parse(TextParser.parseTextBetween(parseWhat, parseTo2, parseTo));
                         solution=ooo.text();
                     }
                     else
                     {
-                        Document ooo = Jsoup.parse(Global.parsit(parseWhat, parseFrom, parseTo));
+                        Document ooo = Jsoup.parse(TextParser.parseTextBetween(parseWhat, parseFrom, parseTo));
                         desc = ooo.text();
                     }
 
