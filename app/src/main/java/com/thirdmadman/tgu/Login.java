@@ -24,8 +24,11 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.Callable;
+import java.util.concurrent.FutureTask;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -38,7 +41,6 @@ public class Login extends Fragment {
     public Button Button_destroy_btn;
     public Button exitButton;
     public TextView MainTitle_text;
-    //    public EditText consoleText;
     public EditText loginField;
     public EditText passField;
     public RelativeLayout loginLayout;
@@ -69,32 +71,20 @@ public class Login extends Fragment {
         userNameText = (TextView) view.findViewById(R.id.loginUserName);
         loginCongratulationsText = (TextView) view.findViewById(R.id.loginCongratulationsText);
         getActivity().setTitle(R.string.login_title_name);
-/*
-        try {
-            String someinf = homePage();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
         loginField = (EditText) view.findViewById(R.id.loginEditText);
         passField = (EditText) view.findViewById(R.id.passEditText);
         save_login_data = (CheckBox) view.findViewById(R.id.saveLoginCheckBox);
         loginPrgrBr = (ProgressBar) view.findViewById(R.id.loginProgressBar);
-//        consoleText = (EditText) view.findViewById(R.id.console);
         Button_destroy_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pass = passField.getText().toString();
-                login = loginField.getText().toString();
-                if (pass.length() > 4 & login.length() >= 4) {
-
+                String login = loginField.getText().toString();
+                String pass = passField.getText().toString();
+                if (pass.length() >= 4 && login.length() >= 1) {
                     if (GlobalSettings.authCookies == null) {
-                        MyTask mt = new MyTask();
-                        mt.execute();
-                        loginPrgrBr.setVisibility(View.VISIBLE);
-                        Button_destroy_btn.setClickable(false);
+                        authUser(login, pass);
                     } else {
                         Context context = getActivity().getApplicationContext();
-
                         CharSequence text = "Вы уже вошли в аккаунт";
                         int duration = Toast.LENGTH_LONG;
                         Toast toast = Toast.makeText(context, text, duration);
@@ -125,11 +115,11 @@ public class Login extends Fragment {
 
     }
 
-    void saveText() {
+    void saveText(String userLogin, String password) {
         sPref = getActivity().getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor ed = sPref.edit();
-        ed.putString("user_login", loginField.getText().toString());
-        ed.putString("user_password", passField.getText().toString());
+        ed.putString("user_login", userLogin);
+        ed.putString("user_password", password);
         ed.apply();
     }
 
@@ -141,7 +131,13 @@ public class Login extends Fragment {
             loginField.setText(savedUserLogin);
             passField.setText(savedUserPassword);
         }
+    }
 
+    void authUser(String userLogin, String password) {
+        loginPrgrBr.setVisibility(View.VISIBLE);
+        Button_destroy_btn.setClickable(false);
+        DoAuthTask doAuth = new DoAuthTask();
+        doAuth.execute(userLogin, password);
     }
 
     @Override
@@ -149,145 +145,120 @@ public class Login extends Fragment {
         super.onDestroy();
     }
 
+    class GetAuthAndUserName implements Callable<HashMap<String, Object>> {
 
-    class MyTask extends AsyncTask<Void, Void, Void> {
-        protected Map<String, String> authCookies = null;
-        String title;
-        boolean needToUpdate = false;
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            Document page = null;
-
-            Connection.Response loginFormget = null;
-            Connection.Response loginForm = null;
-            Document InboxJson = null;
+        private String userLogin = null;
+        private String password = null;
 
 
+        public void setUserLoginAndPassword(String userLogin, String password) {
+            this.userLogin = userLogin;
+            this.password = password;
+        }
+
+        public HashMap<String, Object> call() throws Exception {
+
+            HashMap<String, Object> req = new HashMap<>();
             try {
-                loginFormget = Jsoup.connect("http://edu.tltsu.ru/")
+                Connection.Response loginFormget = Jsoup.connect("http://edu.tltsu.ru/")
                         .method(Connection.Method.GET)
-                        .timeout(3500)
+                        .timeout(5000)
                         .execute();
-                Document loginFragmenPage = loginFormget.parse();
-                // WARNING, VERY IMPORTATN
-                //TODO: rewrite code of check if its upd available
-                //wtf did I just wrote up here
-/*                try {
-                    Connection.Response resp = HttpConnection.connect("https://jsonblob.com/api/jsonBlob/4515815d-a8df-11e7-9d0a-2db3ffdad627")
-                            .ignoreContentType(true)
-                            .timeout(3000)
-                            .execute();
-                    String body = resp.body();
-                    try {
-                        JSONObject jsonObject = new JSONObject(body);
-                        if (jsonObject.getBoolean("resoonse")) {
-                            if (jsonObject.getDouble("lastversion") > GlobalSettings.CurrentVersion) {
-                                needToUpdate = true;
-                            }
-                        }
-                    } catch (JSONException e) {
+                //Document loginFragmenPage = loginFormget.parse();
+                Connection.Response loginForm = Jsoup.connect("https://edu.tltsu.ru/doAutho.php")
+                        .method(Connection.Method.POST)
+                        .data("core_log", userLogin)
+                        .data("core_pas", password)
+                        .data("burl", "http://edu.tltsu.ru/")
+                        .cookies(loginFormget.cookies())
+                        .execute();
+                //Document gg = loginFormget.parse();
+                Map<String, String> authCookies = loginForm.cookies();
+                //page = Jsoup.connect("http://edu.tltsu.ru/edu/timetable.php")
+                if (authCookies != null && authCookies.size() >= 1) {
+                    Document page = Jsoup.connect("http://edu.tltsu.ru/index.php")
+                            .cookies(authCookies)
+                            .timeout(5000)
+                            .get();
+                    String userName = page.select("tr > td.status_box:not(#core_time_place) > p").text();
+                    if (userName != null && userName.length() > 0) {
+                        req.put("cooke", authCookies);
+                        req.put("username", userName);
+                        return req;
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }*/
-                try {
-                    loginForm = Jsoup.connect("https://edu.tltsu.ru/doAutho.php")
-                            .method(Connection.Method.POST)
-                            .data("core_log", login)
-                            .data("core_pas", pass)
-                            .data("burl", "http://edu.tltsu.ru/")
-                            .cookies(loginFormget.cookies())
-                            .execute();
-                    authCookies = loginForm.cookies();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                try {
-                    //page = Jsoup.connect("http://edu.tltsu.ru/edu/timetable.php")
-                    if (authCookies != null) {
-                        page = Jsoup.connect("http://edu.tltsu.ru/index.php")
-                                .cookies(authCookies)
-                                .timeout(3000)
-                                .get();
-
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    title = page.select("tr > td.status_box:not(#core_time_place) > p").text();
-                    if (!title.equals("")) {
-                        user_name = title;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            return req;
+        }
+    }
 
+    private class DoAuthTask extends AsyncTask<String, Void, HashMap<String, Object>> {
+        @Override
+        protected HashMap<String, Object> doInBackground(String... string) {
+            try {
+                String userLogin = string[0];
+                String password = string[1];
+                for (int i = 0; i < 5; i++) {
+                    GetAuthAndUserName getAuthAndUserName = new GetAuthAndUserName();
+                    getAuthAndUserName.setUserLoginAndPassword(userLogin, password);
+                    HashMap<String, Object> req = null;
+                    FutureTask<HashMap<String, Object>> future = new FutureTask<>(getAuthAndUserName);
+                    Thread thread = new Thread(future);
+                    thread.start();
+                    req = future.get();
+                    if (req != null && req.size() == 2 && req.get("username") != null && req.get("cooke") != null) {
+                        String userName = req.get("username").toString();
+                        if (!userName.equals("")) {
+                            if (!userName.contains("Гость")) {
+                                Map<String, String> cooke = (Map<String, String>) req.get("cooke");
+                                saveText(userLogin, password);
+                                GlobalSettings.authCookies = cooke;
+                                GlobalSettings.userSiteName = userName;
+                                sPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                                SharedPreferences.Editor ed = sPref.edit();
+                                ed.putString("user_name", userName);
+                                ed.apply();
+                                return req;
+                            } else {
+                                return req;
+                            }
+                        }
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return null;
         }
 
         @Override
-        protected void onPostExecute(Void result) {
-            loginPrgrBr.setVisibility(View.INVISIBLE);
-            try {
-                super.onPostExecute(result);
-                if (user_name != null) {
-                    if (!user_name.equals("")) {
-                        if (!user_name.contains("Гость")) {
-                            saveText();
-                            GlobalSettings.authCookies = authCookies;
-                            Context context = getActivity().getApplicationContext();
-                            //CharSequence text = "Вы успешно вошли!";
-                            int duration = Toast.LENGTH_SHORT;
-                            //Toast toast = Toast.makeText(context, text, duration);
-                            //toast.show();
-                            if (needToUpdate) {
-                                Toast toast2 = Toast.makeText(context, "Необходимо обновление!", duration);
-                                toast2.show();
-                            }
-                            GlobalSettings.userSiteName = user_name;
-                            userNameText.setText(user_name);
-                            //userNameText.setText("Иванов И.И.");
-                            sPref = getActivity().getPreferences(MODE_PRIVATE);
-                            String savedUserLogin = sPref.getString("user_login", "no data");
-                            if (savedUserLogin.equals("29549")) {
-                                loginCongratulationsText.setText(GlobalSettings.loginCongratulations[(new Random()).nextInt(GlobalSettings.loginCongratulations.length)]);
-                            } else if (savedUserLogin.equals("29649")) {
-                                loginCongratulationsText.setText(GlobalSettings.loginCongratulations[(new Random()).nextInt(GlobalSettings.loginCongratulations.length)]);
-                            }
-                            loginLayout.setVisibility(View.INVISIBLE);
-                            exitLayout.setVisibility(View.VISIBLE);
-                            sPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-                            SharedPreferences.Editor ed = sPref.edit();
-                            ed.putString("user_name", user_name);
-                            ed.commit();
-                        } else {
-                           /* Toast toast3 = Toast.makeText(getActivity().getApplicationContext(), "Введены неверные данные", Toast.LENGTH_SHORT);
-                            toast3.show();*/
-                            Snackbar.make(getView(), "Введены неверные данные", Snackbar.LENGTH_LONG).show();
-                        }
-                    } else {
-                        Toast toast3 = Toast.makeText(getActivity().getApplicationContext(), "Попробуйте ещё раз - сервер отправил пустой ответ", Toast.LENGTH_SHORT);
-                        toast3.show();
+        protected void onPostExecute(HashMap<String, Object> result) {
+            if (result != null) {
+                String userName = result.get("username").toString();
+                if (userName != null &&  !userName.contains("Гость")) {
+                    sPref = getActivity().getPreferences(MODE_PRIVATE);
+                    String savedUserLogin = sPref.getString("user_login", "no data");
+                    if (savedUserLogin.equals("29549")) {
+                        loginCongratulationsText.setText(GlobalSettings.loginCongratulations[(new Random()).nextInt(GlobalSettings.loginCongratulations.length)]);
+                    } else if (savedUserLogin.equals("29649")) {
+                        loginCongratulationsText.setText(GlobalSettings.loginCongratulations[(new Random()).nextInt(GlobalSettings.loginCongratulations.length)]);
                     }
+                    userNameText.setText(userName);
+                    loginLayout.setVisibility(View.INVISIBLE);
+                    exitLayout.setVisibility(View.VISIBLE);
                 } else {
-/*                    Toast toast3 = Toast.makeText(getActivity().getApplicationContext(), "Нет связи с ервером", Toast.LENGTH_SHORT);
-                    toast3.show();*/
-                    Snackbar.make(getView(), "Нет связи с сервером", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(getView(), "Введены неверные данные", Snackbar.LENGTH_LONG).show();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            } else {
+                Snackbar.make(getView(), "Повторите попытку через некоторе вермя", Snackbar.LENGTH_LONG).show();
             }
+            loginPrgrBr.setVisibility(View.INVISIBLE);
             Button_destroy_btn.setClickable(true);
         }
     }
-
 }
 
 
