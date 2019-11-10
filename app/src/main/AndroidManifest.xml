@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MyCabinet"
+            android:name=".activities.MyCabinet"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -22,9 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TimetableGetInfo" />
-        <activity android:name=".ApplicationsGetInfo" />
-        <activity android:name=".ApplicationsNewReq"/>
+        <activity android:name=".activities.TimetableGetInfo" />
+        <activity android:name=".activities.ApplicationsGetInfo" />
+        <activity android:name=".activities.ApplicationsNewReq"/>
     </application>
 
 </manifest>

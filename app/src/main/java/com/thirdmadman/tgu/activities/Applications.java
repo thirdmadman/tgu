@@ -1,4 +1,4 @@
-package com.thirdmadman.tgu;
+package com.thirdmadman.tgu.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,7 +15,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.thirdmadman.tgu.Utils.TextParser;
+import com.thirdmadman.tgu.GlobalSettings;
+import com.thirdmadman.tgu.R;
+import com.thirdmadman.tgu.utils.TextParser;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;

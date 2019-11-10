@@ -1,4 +1,4 @@
-package com.thirdmadman.tgu;
+package com.thirdmadman.tgu.activities;
 
 
 import android.content.Intent;
@@ -18,6 +18,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import com.thirdmadman.tgu.GlobalSettings;
+import com.thirdmadman.tgu.R;
 
 
 public class MyCabinet extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {

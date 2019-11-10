@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 
-import com.thirdmadman.tgu.Utils.TextParser;
+import com.thirdmadman.tgu.utils.TextParser;
 
 import org.jsoup.Jsoup;
 import org.jsoup.select.Elements;

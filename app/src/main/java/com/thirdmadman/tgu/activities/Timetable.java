@@ -1,4 +1,4 @@
-package com.thirdmadman.tgu;
+package com.thirdmadman.tgu.activities;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -24,7 +24,11 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.thirdmadman.tgu.Utils.TextParser;
+import com.thirdmadman.tgu.GlobalSettings;
+import com.thirdmadman.tgu.R;
+import com.thirdmadman.tgu.TimetableXml;
+import com.thirdmadman.tgu.WeeklyTimetable;
+import com.thirdmadman.tgu.utils.TextParser;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

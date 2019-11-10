@@ -1,4 +1,4 @@
-package com.thirdmadman.tgu;
+package com.thirdmadman.tgu.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +15,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.thirdmadman.tgu.GlobalSettings;
+import com.thirdmadman.tgu.R;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;

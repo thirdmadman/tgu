@@ -1,4 +1,4 @@
-package com.thirdmadman.tgu.Utils;
+package com.thirdmadman.tgu.utils;
 
 public class TextParser {
     public static String parseTextBetween(String strSource, String strStart, String strEnd)

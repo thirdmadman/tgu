@@ -1,9 +1,12 @@
-package com.thirdmadman.tgu;
+package com.thirdmadman.tgu.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.thirdmadman.tgu.R;
+import com.thirdmadman.tgu.GlobalSettings;
 
 /**
  * Created by third on 08.09.2017.

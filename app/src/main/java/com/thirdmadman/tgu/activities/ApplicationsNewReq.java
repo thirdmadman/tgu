@@ -1,4 +1,4 @@
-package com.thirdmadman.tgu;
+package com.thirdmadman.tgu.activities;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -7,7 +7,9 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.thirdmadman.tgu.Utils.TextParser;
+import com.thirdmadman.tgu.GlobalSettings;
+import com.thirdmadman.tgu.R;
+import com.thirdmadman.tgu.utils.TextParser;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
